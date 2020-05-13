@@ -1,0 +1,27 @@
+{
+  "name": "holyserver",
+  "version": "1.0.0",
+  "description": "This is server of internet market",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "dependencies": {
+    "bcryptjs": "*",
+    "body-parser": "*",
+    "cors": "*",
+    "exports": "0.0.1",
+    "express": "*",
+    "jsonwebtoken": "*",
+    "mongodb": "^3.5.7",
+    "mongoose": "*",
+    "nodemon": "^2.0.3",
+    "passport": "*",
+    "passport-jwt": "*",
+    "path": "^0.12.7",
+    "react": "^16.13.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
