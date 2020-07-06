@@ -22,13 +22,11 @@ router.get("/:id", function (req, res) {
 router.post("/add", jsonParser, function (req, res) {
     if (!req.body) return res.sendStatus(400);
 
-    const name = req.body.Name;
-    const description = req.body.Description;
-    const products = req.body.Products;
+    const name = req.body.name;
+    const description = req.body.description;
     // TODO add photos
 
-    const category = {Name: name, Description: description, Products: products};
-
+    const category = {name: name, description: description};
     const CategoriesCollection = req.app.locals.CategoriesCollection;
     CategoriesCollection.insertOne(category, function (err, result) {
 
@@ -50,13 +48,11 @@ router.put("/update", jsonParser, function (req, res) {
 
     if (!req.body) return res.sendStatus(400);
     const id = new objectId(req.body.id);
-    const name = req.body.Name;
-    const description = req.body.Description;
-    const Products = req.body.Products;
-    // TODO add photos
+    const name = req.body.name;
+    const description = req.body.description;
 
     const CategoriesCollection = req.app.locals.CategoriesCollection;
-    CategoriesCollection.findOneAndUpdate({_id: id}, {$set: {Name: name, Description: description, Products: Products}},
+    CategoriesCollection.findOneAndUpdate({_id: id}, {$set: {name: name, description: description}},
         {returnOriginal: false}, function (err, result) {
 
             if (err) return res.json({success: false, msg: "Категория не обновлена"});

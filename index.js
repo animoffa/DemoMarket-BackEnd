@@ -4,6 +4,7 @@ const path = require('path');
 const account = require('./routes/Products');
 const categories = require('./routes/Categories');
 const users = require('./routes/Users');
+const ord = require('./routes/Orders');
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const app = express();
@@ -29,6 +30,7 @@ mongoClient.connect(function (err, client) {
     const db = client.db('HolyKey');
     app.locals.ProductsCollection = db.collection('Products');
     app.locals.CategoriesCollection = db.collection('Categories');
+    app.locals.OrdersCollection = db.collection('Orders');
     app.locals.collection = client.db("HolyKey").collection("Users");
 
     app.listen(3000, function () {
@@ -39,6 +41,15 @@ mongoClient.connect(function (err, client) {
 app.use('/products', account);
 app.use('/categories', categories);
 app.use('/users',users);
+
+app.get("/Orders", function (req, res) {
+    const OrdersCollection = req.app.locals.OrdersCollection;
+    OrdersCollection.find({}).toArray(function (err, orders) {
+        if (err) return res.json({success: false, msg: "Заказы не найдены"});
+        res.send(orders)
+    });
+});
+
 
 process.on("SIGINT", () => {
     dbClient.close();
