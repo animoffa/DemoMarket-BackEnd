@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const objectId = require("mongodb").ObjectID;
 const jsonParser = express.json();
+const tokenCheck=require('../middlewares/auth')
 
-router.get('/',(req,res) => {
+router.get('/',tokenCheck,(req,res) => {
     var pageNo = parseInt(req.query.pageNo);
     var size = parseInt(req.query.size);
     var query = {};
@@ -25,7 +26,7 @@ router.get('/',(req,res) => {
         });
     });
     });
-router.get("/:id", function (req, res) {
+router.get("/:id",tokenCheck, function (req, res) {
     const id = new objectId(req.params.id);
     console.log(id);
     const ProductsCollection = req.app.locals.ProductsCollection;
@@ -34,7 +35,7 @@ router.get("/:id", function (req, res) {
         res.send(product);
     });
 });
-router.post("/add", jsonParser, function (req, res) {
+router.post("/add",tokenCheck, jsonParser, function (req, res) {
     if (!req.body) return res.sendStatus(400);
 
     const name = req.body.name;
@@ -56,7 +57,7 @@ router.post("/add", jsonParser, function (req, res) {
         res.send(product);
     });
 });
-router.delete("/:id", function (req, res) {
+router.delete("/:id",tokenCheck, function (req, res) {
 
     const id = new objectId(req.params.id);
     const ProductsCollection = req.app.locals.ProductsCollection;
@@ -67,7 +68,7 @@ router.delete("/:id", function (req, res) {
         res.send(product);
     });
 });
-router.put("/update", jsonParser, function (req, res) {
+router.put("/update",tokenCheck, jsonParser, function (req, res) {
 
     if (!req.body) return res.sendStatus(400);
     const id = new objectId(req.body.id);

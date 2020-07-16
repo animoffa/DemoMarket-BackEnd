@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const objectId = require("mongodb").ObjectID;
 const jsonParser = express.json();
+const tokenCheck=require('../middlewares/auth');
 
-router.get("/", function (req, res) {
+router.get("/",tokenCheck, function (req, res) {
     const collection = req.app.locals.collection;
     collection.find({}).toArray(function (err, users) {
 
@@ -11,7 +12,7 @@ router.get("/", function (req, res) {
         res.send(users)
     });
 });
-router.get("/:id", function (req, res) {
+router.get("/:id",tokenCheck, function (req, res) {
     const id = new objectId(req.params.id);
     const collection = req.app.locals.collection;
     collection.findOne({_id: id}, function (err, user) {
@@ -22,7 +23,7 @@ router.get("/:id", function (req, res) {
 });
 
 
-router.delete("/:id", function (req, res) {
+router.delete("/:id",tokenCheck, function (req, res) {
 
     const id = new objectId(req.params.id);
     const collection = req.app.locals.collection;
@@ -34,7 +35,7 @@ router.delete("/:id", function (req, res) {
     });
 });
 
-router.put("/", jsonParser, function (req, res) {
+router.put("/",tokenCheck, jsonParser, function (req, res) {
 
     if (!req.body) return res.sendStatus(400);
     const id = new objectId(req.body.id);

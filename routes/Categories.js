@@ -2,15 +2,16 @@ const express = require('express');
 const router = express.Router();
 const objectId = require("mongodb").ObjectID;
 const jsonParser = express.json();
+const tokenCheck=require('../middlewares/auth');
 
-router.get("/", function (req, res) {
+router.get("/", tokenCheck,function (req, res) {
     const CategoriesCollection = req.app.locals.CategoriesCollection;
     CategoriesCollection.find({}).toArray(function (err, categories) {
         if (err) return res.json({success: false, msg: "Категории не найдены"});
         res.send(categories)
     });
 });
-router.get("/:id", function (req, res) {
+router.get("/:id",tokenCheck, function (req, res) {
     const id = new objectId(req.params.id);
     console.log(id);
     const CategoriesCollection = req.app.locals.CategoriesCollection;
@@ -19,7 +20,7 @@ router.get("/:id", function (req, res) {
         res.send(categories);
     });
 });
-router.post("/add", jsonParser, function (req, res) {
+router.post("/add", tokenCheck,jsonParser, function (req, res) {
     if (!req.body) return res.sendStatus(400);
 
     const name = req.body.name;
@@ -34,7 +35,7 @@ router.post("/add", jsonParser, function (req, res) {
         res.send(category);
     });
 });
-router.delete("/:id", function (req, res) {
+router.delete("/:id",tokenCheck, function (req, res) {
     const id = new objectId(req.params.id);
     const CategoriesCollection = req.app.locals.CategoriesCollection;
     CategoriesCollection.findOneAndDelete({_id: id}, function (err, result) {
@@ -44,7 +45,7 @@ router.delete("/:id", function (req, res) {
         res.send(category);
     });
 });
-router.put("/update", jsonParser, function (req, res) {
+router.put("/update",tokenCheck, jsonParser, function (req, res) {
 
     if (!req.body) return res.sendStatus(400);
     const id = new objectId(req.body.id);

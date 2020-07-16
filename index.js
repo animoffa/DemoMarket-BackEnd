@@ -4,11 +4,13 @@ const path = require('path');
 const account = require('./routes/Products');
 const categories = require('./routes/Categories');
 const users = require('./routes/Users');
+const auth=require('./routes/auth');
 const ord = require('./routes/Orders');
 const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const app = express();
 const jsonParser = express.json();
+require('dotenv').config()
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -41,6 +43,7 @@ mongoClient.connect(function (err, client) {
 app.use('/products', account);
 app.use('/categories', categories);
 app.use('/users',users);
+app.use('/auth', auth);
 
 app.get("/Orders", function (req, res) {
     const OrdersCollection = req.app.locals.OrdersCollection;
