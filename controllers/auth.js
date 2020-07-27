@@ -12,9 +12,10 @@ router.signup = (req, res) => {
     try {
         const newUser={mail,name,basket,password: bcrypt.hashSync(password, 8)};
         collection.insertOne(newUser, function (err, result) {
-            if (err) return res.json({success: false, msg: "Вы не зарегистрированы"});
+            if (err) return res.json({success: false, msg: "error"});
             res.send(newUser);
         });
+
     } catch (err) {
         res.status(500).json({
             success: false,
@@ -26,16 +27,15 @@ router.signup = (req, res) => {
 router.signin = async (req, res) => {
     const {email, password} = req.body
     console.log (req.body)
+    let success=true;
     const collection = req.app.locals.collection;
     try {
-        console.log(1, email, password)
         const user = await collection.findOne({mail:email})
         if (!user)
             return res.status(400).json({
                 success: false,
                 msg:UserFailmsg
             })
-        console.log(2, user)
 
         const isMatch = bcrypt.compareSync(password, user.password)
         if (!isMatch)
@@ -43,15 +43,14 @@ router.signin = async (req, res) => {
             success: false,
             msg:UserFailmsg
         })
-        console.log(3)
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: 300000})
-        console.log(4)
         res.status(200).json(({
-            id: user.id,
+            id: user._id,
             mail: user.mail,
             name: user.name,
             basket: user.basket,
-            token
+            success,
+            token,
         }))
     } catch (err) {
         console.log(err.toString())
