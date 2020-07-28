@@ -10,7 +10,7 @@ router.signup = (req, res) => {
     const {mail,name, basket, password} = req.body;
 
     try {
-        const newUser={mail,name,basket,password: bcrypt.hashSync(password, 8)};
+        const newUser={mail,name,basket,isAdmin:false,password: bcrypt.hashSync(password, 8)};
         collection.insertOne(newUser, function (err, result) {
             if (err) return res.json({success: false, msg: "error"});
             res.send(newUser);
@@ -49,15 +49,14 @@ router.signin = async (req, res) => {
             mail: user.mail,
             name: user.name,
             basket: user.basket,
+            isAdmin:user.isAdmin,
             success,
             token,
         }))
     } catch (err) {
-        console.log(err.toString())
         res.status(400).json({
             success: false,
             msg:err
         })
     }
 }
-module.exports=router
